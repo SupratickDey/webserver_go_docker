@@ -1,17 +1,23 @@
-# Dockerfile References: https://docs.docker.com/engine/reference/builder/
+FROM golang:alpine as build-env
 
-# Start from golang:1.12-alpine base image
-FROM golang:1.12-alpine
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+RUN apk update
+RUN apk add megatools
 
-# The latest alpine images don't have some tools like (`git` and `bash`).
-# Adding git, bash and openssh to the image
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+RUN apk --no-cache add gcc g++ make git
+# RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+
+# RUN apk update \
+#     && apk add -u git
+
+##RUN apk add --update git
 
 # Add Maintainer Info
 LABEL maintainer="Supratick Dey"
 
 # Set the Current Working Directory inside the container
+RUN mkdir /app
 WORKDIR /app
 
 # Copy go mod and sum files
@@ -23,11 +29,13 @@ RUN go mod download
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
+
+
 # Build the Go app
-RUN go build -o main .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/server
+##RUN chmod +x script.sh
 
-# Expose port 8080 to the outside world
-EXPOSE 6547
-
-# Run the executable
-CMD ["./server"]
+# Run the bin
+FROM scratch
+COPY --from=build-env /go/bin/server /go/bin/server
+ENTRYPOINT ["/go/bin/server"]

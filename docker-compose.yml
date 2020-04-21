@@ -1,15 +1,12 @@
 # Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
-
 version: "3"
-
-# Define services
 services:
   # App Service
-  app:
-    # Configuration for building the docker image for the service
+  license:
+    container_name: ezrx_license_api_uat
     build:
-      context: . # Use an image built from the specified dockerfile in the current directory.
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: dockerfile
     ports:
-      - "6547:6547" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+      - "6547:6547"
     restart: unless-stopped
