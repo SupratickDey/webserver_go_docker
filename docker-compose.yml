@@ -2,8 +2,8 @@
 version: "3"
 services:
   # App Service
-  license:
-    container_name: ezrx_license_api_uat
+  http_server:
+    container_name: http_server_example
     build:
       context: ./
       dockerfile: dockerfile

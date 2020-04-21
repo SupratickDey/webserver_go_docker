@@ -32,10 +32,10 @@ COPY . .
 
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/server
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/godocker
 ##RUN chmod +x script.sh
 
 # Run the bin
 FROM scratch
-COPY --from=build-env /go/bin/server /go/bin/server
-ENTRYPOINT ["/go/bin/server"]
+COPY --from=build-env /go/bin/godocker /go/bin/godocker
+ENTRYPOINT ["/go/bin/godocker"]
