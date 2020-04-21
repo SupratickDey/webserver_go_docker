@@ -12,6 +12,6 @@ func main() {
 
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	fmt.Println("Server started at port 6060")
-	http.ListenAndServe(":6060", nil)
+	fmt.Println("Server started at port 6547")
+	http.ListenAndServe(":6547", nil)
 }
